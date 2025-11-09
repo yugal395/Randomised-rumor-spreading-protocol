@@ -1,70 +1,96 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[11pt,a4paper]{article}
 
 % ---------- PACKAGES ----------
-\usepackage[utf8]{inputenc}
 \usepackage{graphicx}
-\usepackage{caption}
-\usepackage{float}
+\usepackage{amsmath}
 \usepackage{geometry}
-\usepackage{hyperref}
-\geometry{margin=1in}
-\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{caption}
 
-% ---------- TITLE ----------
-\title{\textbf{Simulation and Visualization of Randomized Rumor Spreading Protocols}}
-\author{Yugal Verma \\ Technical University of Hamburg}
-\date{\today}
+% ---------- PAGE SETUP ----------
+\geometry{margin=1in}
+\setstretch{1.2}
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
 
 \begin{document}
-\maketitle
 
-% ---------- INTRODUCTION ----------
+% ---------- LOGO (HIGHER UP, TOP-RIGHT) ----------
+\begin{flushright}
+    \vspace*{-1cm} % pushes logo close to top edge
+    \includegraphics[width=3cm]{logo.png} % <-- ensure this file exists in same folder
+\end{flushright}
+
+% ---------- CENTERED TITLE BLOCK ----------
+\vspace{1cm} % space between logo and title block
+\begin{center}
+    \textbf{\Large Data Mining – Exercise Sheet 2}\\[0.5em]
+    \LARGE Simulation of Randomised Rumor Spreading Protocols\\[1em]
+
+    \normalsize
+    \textbf{Group Members:}\\
+    Mohammad Umar\\
+    Yugal Verma\\
+    Adam Bielecki\\[0.5em]
+
+    Hamburg University of Technology\\
+    \texttt{(Group Project Submission)}\\[1em]
+    \today
+\end{center}
+
+\vspace{1cm}
+
+% ---------- CONTENT ----------
 \section{Introduction}
-This report presents a simulation study of a simple \textit{randomized rumor spreading protocol}.
-In the model, a system of \(n\) agents exchange information in synchronized rounds.
-Initially, only one agent is \textit{informed}, and the goal is to spread the rumor to all others.
-We analyze three basic protocols: \textbf{Push}, \textbf{Pull}, and \textbf{Push–Pull}.
+The objective of this project is to simulate and compare three rumor spreading protocols—\textbf{Push}, \textbf{Pull}, and \textbf{Push–Pull}. These protocols model how information propagates through a network of agents. Each agent can either share or request information from another random agent in successive rounds until the entire network is informed.
 
-% ---------- METHODOLOGY ----------
-\section{Simulation Methodology}
-The simulation was implemented in Python using random interactions between agents:
-\begin{itemize}
-  \item \textbf{Push:} Informed agents call a random peer to share the rumor.
-  \item \textbf{Pull:} Uninformed agents call a random peer and learn the rumor if that peer is informed.
-  \item \textbf{Push–Pull:} Both agents exchange information, so if either knows the rumor, both become informed.
-\end{itemize}
-The program measures the number of rounds required for all \(n\) agents to become informed.
-Simulations were performed for \(n=\{10,50,100,500,1000\}\).
+This exercise builds upon our previous work, where we used Python for data visualization and statistical analysis. The experience gained in using \textbf{Seaborn} for advanced visualization in the last project was particularly helpful for designing cleaner and more interpretable comparative plots in this assignment.
 
-% ---------- RESULTS ----------
+\section{Methodology}
+The simulation was implemented in Python using the \texttt{random} and \texttt{matplotlib.pyplot} modules.
+
+\subsection*{Push Model}
+In the Push model, each informed agent randomly selects another agent in every round and shares the rumor. The process repeats until all agents become informed.
+
+\subsection*{Pull Model}
+In the Pull model, uninformed agents randomly contact another agent in each round. If the contacted agent is informed, the rumor is pulled successfully.
+
+\subsection*{Push–Pull Model}
+In the combined Push–Pull model, both interactions occur simultaneously: informed agents share information, and uninformed agents attempt to receive it. This generally results in faster information dissemination.
+
+\section{Implementation}
+The implementation consists of three main simulation functions—\texttt{simulate\_push}, \texttt{simulate\_pull}, and \texttt{simulate\_push\_pull}. Each function returns the number of rounds required to inform all agents for a given population size $n$.
+
+The simulation campaign tested populations of $n = 10, 50, 100, 500, 1000,$ and $5000$ agents. The results were recorded for each protocol and plotted using \texttt{matplotlib} and \texttt{seaborn}.
+
 \section{Results and Discussion}
-Figure~\ref{fig:lineplot} shows how the number of rounds increases as the system grows.
-The Push–Pull protocol consistently reaches full dissemination in the fewest rounds,
-while Push and Pull exhibit similar but slower performance.
+The figures below compare the number of rounds required to spread the rumor under different protocols and visualize the spread intensity across multiple simulations.
 
-% ---------- FIGURE 1 ----------
 \begin{figure}[H]
-  \centering
-  \includegraphics[width=0.8\textwidth]{rumor_spreading_comparison.png}
-  \caption{Rounds to spread the rumor for varying numbers of agents across Push, Pull, and Push–Pull protocols.}
-  \label{fig:lineplot}
+    \centering
+    % Each image takes up roughly half the page width
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{lineplot.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{heatmap.png}
+    \end{minipage}
+    \caption{Comparison of rumor spreading results: the \textbf{Line Plot} (left) shows convergence speed of Push, Pull, and Push–Pull models, while the \textbf{Heatmap} (right) visualizes spread intensity and efficiency across varying population sizes.}
 \end{figure}
 
-To illustrate the relative differences across all scales, a heatmap visualization is provided in Figure~\ref{fig:heatmap}.
-Lighter colors correspond to faster spreading (fewer rounds).
+The line plot demonstrates that the Push–Pull model outperforms the other two, achieving faster convergence in fewer rounds. The heatmap helps visualize the relative efficiency and density of information flow, reinforcing the hybrid model's advantage in faster propagation.
 
-% ---------- FIGURE 2 ----------
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.75\textwidth]{heatmap_comparison.png}
-  \caption{Heatmap showing rounds required by each protocol for different agent counts.}
-  \label{fig:heatmap}
-\end{figure}
+\section{Reflection and Learning}
+From a computational perspective, this simulation reinforced our understanding of iterative random processes, convergence, and stochastic modeling. Prior experience using \textbf{Seaborn} in earlier exercises helped us visualize statistical relationships effectively. Although Matplotlib handled the basic visualization, Seaborn’s interface was essential for generating the heatmap and enhancing interpretability.
 
-% ---------- CONCLUSION ----------
 \section{Conclusion}
-The Push–Pull protocol demonstrates the highest efficiency, achieving full rumor spread in the fewest rounds.
-The number of rounds grows sub-linearly with \(n\), indicating that rumor spreading scales well even in large systems.
-Such protocols model efficient data dissemination methods used in distributed systems like Amazon DynamoDB or peer-to-peer networks.
+This project successfully simulated and compared three rumor spreading strategies. The Push–Pull model consistently achieved the fastest information spread. Future work could explore the effect of probabilistic interactions or constrained network topologies.
+
+\vspace{1em}
+\noindent\textbf{Keywords:} rumor spreading, push-pull model, Python simulation, network propagation, data visualization
 
 \end{document}
