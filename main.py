@@ -63,3 +63,44 @@ def simulate_push_pull(n):
 
 print(simulate_push_pull(10)) # testing the function with n=10
 
+
+# Now we will do a simulation campaign here
+
+n_values=[10,50,100,500,1000,5000]
+push_results=[]
+pull_results=[]     
+push_pull_results=[]
+
+for n in n_values:
+    print(f"Simulating for n={n}")
+    push_rounds=[]
+    pull_rounds=[]
+    push_pull_rounds=[]
+    
+    push_rounds=simulate_push(n)
+    pull_rounds=simulate_pull(n)
+    push_pull_rounds=simulate_push_pull(n)
+
+    push_results.append(push_rounds)
+    pull_results.append(pull_rounds)        
+    push_pull_results.append(push_pull_rounds)
+
+    print(f"Push: {push_rounds} rounds, Pull: {pull_rounds} rounds, Push-Pull: {push_pull_rounds} rounds")
+    
+
+
+
+    #Interesting things here are that push-pull is generally faster than either push or pull alone.
+    #using 10^9 agents would freeze the computer so avoided that
+
+
+
+
+
+#visulaization of results
+
+plt.plot(n_values, push_results, label='Push', marker='o')
+plt.plot(n_values, pull_results, label='Pull', marker='s')
+plt.plot(n_values, push_pull_results, label='Push-Pull', marker='^')
+plt.xlabel('Number of Agents (n)')
+plt.ylabel('Number of Rounds to Inform All')
